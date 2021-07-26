@@ -9,6 +9,7 @@ flask-restful = "*"
 flask-login = "*"
 oauthlib = "*"
 requests = "*"
+click = "*"
 
 [dev-packages]
 jedi = "*"
