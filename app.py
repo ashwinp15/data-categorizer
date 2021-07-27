@@ -13,6 +13,7 @@ from flask_login import (
         )
 
 from oauthlib.oauth2 import WebApplicationClient
+from werkzeug.utils import secure_filename
 import requests
 
 # Local imports
@@ -30,6 +31,7 @@ GOOGLE_DISCOVERY_URL = os.environ.get("GOOGLE_DISCOVERY_URL", None)
 # Application setup
 app = Flask(__name__)
 app.config['DATABASE'] = "sqlite-db"
+# app.config['UPLOAD_FOLDER'] = "/home/ashwin/Documents/Repos/mine/KakchoAssignment/dataset-categorizer/data/"
 app.secret_key = os.environ.get("SECRET_KEY")
 
 # Uesr authentication setup
@@ -57,10 +59,16 @@ def index():
     if current_user.is_authenticated:
         return (
                 "<p>Hello, {}! You're logged in! Email: {}</p>"
-                '<a class="button" href="/logout">Logout</a>'.format(
-                    current_user.name, current_user.email,
-                    )
-                )
+                '<a class="button" href="/logout">Logout</a>'
+                """ <form action = "https://127.0.0.1:5000/upload" method = "POST" 
+         enctype = "multipart/form-data">
+         <input type = "file" name = "file" />
+         <input type = "submit"/>
+      </form>   """
+      .format(
+          current_user.name, current_user.email,
+          )
+      )
     else:
         return '<a class="button" href="/login">Google Login</a>'
 
@@ -121,6 +129,18 @@ def callback():
 
     return redirect(url_for("index"))
 
+@app.route("/upload", methods = ['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        f = request.files['file']
+        filename = secure_filename(f.filename)
+        f.save(secure_filename(f.filename))
+        return ('<p><a href="/paymentFilter/{}">Filter by payment</a></p>'
+                '<p><a href="/ratingFilter/{}">Filter by ratings</a></p>'
+                '<p><a href="/roundOff/{}">Round off ratings</a></p>'.format(
+                    filename, filename, filename
+                    )
+                )
 
 
 if __name__ == "__main__":

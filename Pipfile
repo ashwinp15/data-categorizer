@@ -11,6 +11,7 @@ oauthlib = "*"
 requests = "*"
 click = "*"
 pyopenssl = "*"
+werkzeug = "*"
 
 [dev-packages]
 jedi = "*"
