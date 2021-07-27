@@ -12,6 +12,7 @@ requests = "*"
 click = "*"
 pyopenssl = "*"
 werkzeug = "*"
+pandas = "*"
 
 [dev-packages]
 jedi = "*"

@@ -19,6 +19,7 @@ import requests
 # Local imports
 import db # for init_db_command, init_app
 from user import User
+import process
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -137,11 +138,22 @@ def upload():
         f.save(secure_filename(f.filename))
         return ('<p><a href="/paymentFilter/{}">Filter by payment</a></p>'
                 '<p><a href="/ratingFilter/{}">Filter by ratings</a></p>'
-                '<p><a href="/roundOff/{}">Round off ratings</a></p>'.format(
+                '<p><a href="/roundOffRatings/{}">Round off ratings</a></p>'.format(
                     filename, filename, filename
                     )
                 )
 
+@app.route("/paymentFilter/<filename>")
+def paymentFilter(filename):
+    return process.paymentFilter(filename)
+
+@app.route("/ratingFilter/<filename>")
+def ratingFilter(filename):
+    return process.contentRatingFilter(filename)
+
+@app.route("/roundOffRatings/<filename>")
+def roundOffRatings(filename):
+    return process.roundOffRatings(filename)
 
 if __name__ == "__main__":
     app.run(ssl_context="adhoc", debug=True)
