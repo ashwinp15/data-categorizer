@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from db import get_db
 
 class User(UserMixin):
     def __init__ (self, id_, name, email):
@@ -6,9 +7,24 @@ class User(UserMixin):
         self.name = name
         self.email = email 
 
+    @staticmethod
     def get(user_id):
-        # need to implement
-        return 0
+        db = get_db()
+        user = db.execute(
+                "SELECT * FROM users WHERE id = ?", (user_id,)
+                ).fetchone()
+        if not user:
+            return None
+        user = User(id_=user[0], name=user[1], email=user[2])
+        return user
 
+
+    @staticmethod
     def create(id_, name, email):
-
+        db = get_db()
+        db.execute(
+                """INSERT INTO users(id, name, email)
+                    VALUES (?,?,?)""",
+                    (id_, name, email),
+                )
+        db.commit()

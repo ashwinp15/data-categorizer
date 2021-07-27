@@ -27,6 +27,5 @@ def init_db_command():
     click.echo("Database initialized")
 
 def init_app(app):
-    # need to implement
-
-
+    app.teardown_appcontext(close_db)
+    app.cli.add_command(init_db_command)
